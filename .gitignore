@@ -3,4 +3,5 @@
 # except for .gitignore
 !.gitignore
 
-# other ignores
+# build folder
+build/

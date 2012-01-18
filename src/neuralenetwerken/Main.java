@@ -17,5 +17,9 @@ public class Main {
         String testDataLabels = "data/t10k-labels.idx1-ubyte";
         
         MnistReader imageReader = new MnistReader(trainingsDataImages, trainingsDataLabels, testDataImages, testDataLabels);
+        
+        imageReader.getTrainingsImages();
+        
+        NeuralNetwork network = new NeuralNetwork();
     }
 }
