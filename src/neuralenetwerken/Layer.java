@@ -11,12 +11,15 @@ import java.util.List;
 public class Layer
 {
 
-    List<Neuron> neurons;
+    List<Neuron> neurons = new ArrayList<Neuron>();;
     Layer prevLayer;
 
-    public Layer()
+    public Layer() {
+    }
+    
+    public Layer(Layer prevLayer)
     {
-        neurons = new ArrayList<Neuron>();
+        this.prevLayer = prevLayer;
     }
 
     public void forwardPropogate()

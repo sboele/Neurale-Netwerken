@@ -20,6 +20,6 @@ public class Main {
         
         imageReader.getTrainingsImages();
         
-        NeuralNetwork network = new NeuralNetwork();
+        NeuralNetwork network = new NeuralNetwork(8);
     }
 }
