@@ -7,11 +7,19 @@ package neuralenetwerken;
  */
 public class Link
 {
-    int neuronIndex;
+    Neuron neuron;
     double weight;
     
-    public Link(int neuronIndex, double weight) {
-        this.neuronIndex = neuronIndex;
+    public Link(Neuron neuron, double weight) {
+        this.neuron = neuron;
         this.weight = weight;
+    }
+    
+    public Neuron getNeuron() {
+        return neuron;
+    }
+    
+    public double getWeight() {
+        return weight;
     }
 }

@@ -22,8 +22,23 @@ public class Layer
         this.prevLayer = prevLayer;
     }
 
+    public List<Neuron> getNeurons() {
+        return neurons;
+    }
+    
+    public Layer getPrevLayer() {
+        return prevLayer;
+    }
+    
     public void forwardPropogate()
     {
+        for (Neuron neuron : neurons) {
+            double total = 0.0;
+            for( Link link : neuron.getLinks()) {
+                total += link.getWeight() * link.getNeuron().getValue();
+            }
+            neuron.setValue(HyperbolicTangent.activation(total));
+        }
     }
 
     public void backPropogate()

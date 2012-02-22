@@ -18,8 +18,17 @@ public class Main {
         
         MnistReader imageReader = new MnistReader(trainingsDataImages, trainingsDataLabels, testDataImages, testDataLabels);
         
-        imageReader.getTrainingsImages();
+        //imageReader.getTrainingsImages();
+        imageReader.getTrainingImage(15);
         
         NeuralNetwork network = new NeuralNetwork(8);
+        
+        for(int i = 1 ; i < imageReader.getTrainingLength() ; i++) {
+            int[] image = imageReader.getTrainingImage(i);
+            int label = imageReader.getTrainingLabel(i);
+            
+            double[] output = network.forwardPropogate(image);
+            
+        }
     }
 }
