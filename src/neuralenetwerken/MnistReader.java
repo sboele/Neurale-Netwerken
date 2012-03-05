@@ -46,32 +46,68 @@ public class MnistReader {
     public int[] getTrainingImage(int index) {
         trainingsData.setCurrent(index);
         int[][] image = new int[28][28];
-        int[] result = new int[784];
+        int[] newImage = new int[784];
+
         try {
             image = trainingsData.readImage();
             for (int i = 0; i < image.length; i++) {
-                System.arraycopy(image[i], 0, result, i * image.length, image[i].length);
-                return result;
+                for (int j = 0; j < image[i].length; j++) {
+                    newImage[j + i * image.length] = image[i][j];
+                }
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            return newImage;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
-    
+
     public int getTrainingLabel(int index) {
         trainingsData.setCurrent(index);
-        int result = 0 ;
+        int result = 0;
         try {
             result = trainingsData.readLabel();
-        }
-        catch(IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         return result;
     }
-    
+
     public int getTrainingLength() {
         return trainingsData.getImages().getCount();
+    }
+
+    public int[] getTestImage(int index) {
+        testData.setCurrent(index);
+        int[][] image = new int[28][28];
+        int[] newImage = new int[784];
+
+        try {
+            image = testData.readImage();
+            for (int i = 0; i < image.length; i++) {
+                for (int j = 0; j < image[i].length; j++) {
+                    newImage[j + i * image.length] = image[i][j];
+                }
+            }
+            return newImage;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int getTestLabel(int index) {
+        testData.setCurrent(index);
+        int result = 0;
+        try {
+            result = testData.readLabel();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
+    public int getTestLength() {
+        return testData.getImages().getCount();
     }
 }
