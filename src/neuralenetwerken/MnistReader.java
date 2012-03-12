@@ -43,19 +43,24 @@ public class MnistReader {
         return result;
     }
 
-    public int[] getTrainingImage(int index) {
+    //public int[] getTrainingImage(int index) {
+    public double[] getTrainingImage(int index) {
         trainingsData.setCurrent(index);
         int[][] image = new int[28][28];
-        int[] newImage = new int[784];
+        //int[] newImage = new int[784];
+        double[] newImage = new double[784];
 
         try {
             image = trainingsData.readImage();
             for (int i = 0; i < image.length; i++) {
                 for (int j = 0; j < image[i].length; j++) {
-                    newImage[j + i * image.length] = image[i][j];
+                    //newImage[j + i * image.length] = image[i][j];
+                    newImage[j + i * image.length] = ((double) image[i][j] / 128.0) - 1.0;
                 }
             }
             return newImage;
+            //OtsuTresholdingAlgorithm ota = new OtsuTresholdingAlgorithm();			
+            //return ota.doThreshold(newImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,19 +82,24 @@ public class MnistReader {
         return trainingsData.getImages().getCount();
     }
 
-    public int[] getTestImage(int index) {
+    //public int[] getTestImage(int index) {
+    public double[] getTestImage(int index) {
         testData.setCurrent(index);
         int[][] image = new int[28][28];
-        int[] newImage = new int[784];
+        //int[] newImage = new int[784];
+        double[] newImage = new double[784];
 
         try {
             image = testData.readImage();
             for (int i = 0; i < image.length; i++) {
                 for (int j = 0; j < image[i].length; j++) {
-                    newImage[j + i * image.length] = image[i][j];
+                    //newImage[j + i * image.length] = image[i][j];
+                    newImage[j + i * image.length] = ((double) image[i][j] / 128.0) - 1.0;
                 }
             }
             return newImage;
+            //OtsuTresholdingAlgorithm ota = new OtsuTresholdingAlgorithm();			
+            //return ota.doThreshold(newImage);
         } catch (IOException e) {
             e.printStackTrace();
         }

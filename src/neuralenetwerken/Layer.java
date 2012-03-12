@@ -40,10 +40,10 @@ public class Layer {
                 double total = 0.0;
                 for (Link link : neuron.getLinks()) {
                     total += link.getWeight() * link.getNeuron().getValue();
-                    System.out.println("New total: "+ total + " -- "+ link.getNeuron().getValue());
+                    //System.out.println("New total: "+ total + " -- "+ link.getNeuron().getValue());
                 }
                 neuron.setValue(HyperbolicTangent.activation(total));
-                System.out.println("Value: "+neuron.getValue());
+                //System.out.println("Value: "+neuron.getValue());
             }
         }
     }

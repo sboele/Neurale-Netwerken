@@ -26,19 +26,21 @@ public class Main {
 
         NeuralNetwork network = new NeuralNetwork(sizeOfHiddenLayer);
         
-        for (int i = 1; i < 3000 ; i++) {
-        //for (int i = 1; i < imageReader.getTrainingLength(); i++) {
-            int[] image = imageReader.getTrainingImage(i);
+        //for (int i = 1; i < 25000 ; i++) {
+        for (int i = 1; i < imageReader.getTrainingLength(); i++) {
+            //int[] image = imageReader.getTrainingImage(i);
+            double[] image = imageReader.getTrainingImage(i);
             int label = imageReader.getTrainingLabel(i);
 
             double[] output = network.forwardPropogate(image);
             network.backPropogate(output, Helper.getTargetOutput(label), eta);
-            System.out.println("Training I: "+i);
+            //System.out.println("Training I: "+i);
         }
 
         int numberOfRightAnswers = 0;
         for (int i = 1; i <= imageReader.getTestLength(); i++) {
-            int[] image = imageReader.getTestImage(i);
+            //int[] image = imageReader.getTestImage(i);
+            double[] image = imageReader.getTestImage(i);
             int label = imageReader.getTestLabel(i);
             double[] actualOutput = network.forwardPropogate(image);
 
@@ -50,12 +52,12 @@ public class Main {
                     bestIndex = j;
                 }
             }
-
+            //System.out.println("Output: "+ bestIndex + " -- Expected: " +label );
             if (label == bestIndex) {
                 numberOfRightAnswers++;
             }
-            System.out.println("Testing I: "+i);
+            //System.out.println("Testing I: "+i);
         }
-        System.out.println("Right answers: " + numberOfRightAnswers + "/" + imageReader.getTestLength() + " == " + numberOfRightAnswers/imageReader.getTestLength()*100 + "%");
+        System.out.println("Right answers: " + numberOfRightAnswers + "/" + imageReader.getTestLength() + " == " + (double) numberOfRightAnswers / (double) imageReader.getTestLength()*100.0 + "%");
     }
 }

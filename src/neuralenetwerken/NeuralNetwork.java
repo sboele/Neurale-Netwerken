@@ -33,7 +33,7 @@ public class NeuralNetwork {
 
         for (Neuron neuron : neuronsHiddenLayer) {
             for (Neuron neuronPreviousLayer : neuronsInputLayer) {
-                neuron.addLink(neuronPreviousLayer, -0.05 + Math.random() * 0.05);
+                neuron.addLink(neuronPreviousLayer, 0.5 - Math.random());
             }
         }
         hiddenLayer.setNeurons(neuronsHiddenLayer);
@@ -48,7 +48,7 @@ public class NeuralNetwork {
 
         for (Neuron neuron : neuronsOutputLayer) {
             for (Neuron neuronPreviousLayer : neuronsHiddenLayer) {
-                neuron.addLink(neuronPreviousLayer, -0.05 + Math.random() * 0.05);
+                neuron.addLink(neuronPreviousLayer, 0.5 - Math.random());
             }
         }
         outputLayer.setNeurons(neuronsOutputLayer);
@@ -96,13 +96,14 @@ public class NeuralNetwork {
 //            }
 //        }
     }
-
-    public double[] forwardPropogate(int[] input) {
+public double[] forwardPropogate(double[] input) {
+    //public double[] forwardPropogate(int[] input) {
         Layer layer1 = layers.get(0);
         int counter = 0;
 
         for (Neuron neuron : layer1.getNeurons()) {
-            neuron.setValue((double) input[counter]);
+            //neuron.setValue((double) input[counter]);
+            neuron.setValue(input[counter]);
             counter++;
         }
 
