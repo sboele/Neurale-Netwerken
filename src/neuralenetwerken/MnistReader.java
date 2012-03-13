@@ -3,8 +3,6 @@ package neuralenetwerken;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mnist.tools.MnistImageFile;
 import mnist.tools.MnistManager;
 
@@ -43,26 +41,25 @@ public class MnistReader {
         return result;
     }
 
-    //public int[] getTrainingImage(int index) {
     public double[] getTrainingImage(int index) {
         trainingsData.setCurrent(index);
         int[][] image = new int[28][28];
-        //int[] newImage = new int[784];
-        double[] newImage = new double[784];
+        double[] imageD = new double[784];
+        ArrayList<Double> temp = new ArrayList<Double>();
 
         try {
             image = trainingsData.readImage();
             for (int i = 0; i < image.length; i++) {
                 for (int j = 0; j < image[i].length; j++) {
-                    //newImage[j + i * image.length] = image[i][j];
-                    newImage[j + i * image.length] = ((double) image[i][j] / 128.0) - 1.0;
+                    temp.add((double) image[i][j]);
                 }
             }
-            return newImage;
-            //OtsuTresholdingAlgorithm ota = new OtsuTresholdingAlgorithm();			
-            //return ota.doThreshold(newImage);
-        } catch (IOException e) {
-            e.printStackTrace();
+            for(int i = 0 ; i < temp.size() ; i++) {
+                imageD[i] = (double) temp.get(i) / 128.0;
+            }
+            return imageD;
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
         return null;
     }
@@ -82,26 +79,25 @@ public class MnistReader {
         return trainingsData.getImages().getCount();
     }
 
-    //public int[] getTestImage(int index) {
     public double[] getTestImage(int index) {
         testData.setCurrent(index);
         int[][] image = new int[28][28];
-        //int[] newImage = new int[784];
-        double[] newImage = new double[784];
-
+        double[] imageD = new double[784];
+        ArrayList<Double> temp = new ArrayList<Double>();
+        
         try {
             image = testData.readImage();
             for (int i = 0; i < image.length; i++) {
                 for (int j = 0; j < image[i].length; j++) {
-                    //newImage[j + i * image.length] = image[i][j];
-                    newImage[j + i * image.length] = ((double) image[i][j] / 128.0) - 1.0;
+                    temp.add((double) image[i][j]);
                 }
             }
-            return newImage;
-            //OtsuTresholdingAlgorithm ota = new OtsuTresholdingAlgorithm();			
-            //return ota.doThreshold(newImage);
-        } catch (IOException e) {
-            e.printStackTrace();
+            for(int i = 0 ; i < temp.size() ; i++) {
+                imageD[i] = (double) temp.get(i) / 128.0;
+            }
+            return imageD;
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
         return null;
     }
@@ -111,8 +107,8 @@ public class MnistReader {
         int result = 0;
         try {
             result = testData.readLabel();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
         return result;
     }

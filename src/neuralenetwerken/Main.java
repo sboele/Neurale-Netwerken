@@ -16,7 +16,7 @@ public class Main {
         String testDataImages = "data/t10k-images.idx3-ubyte";
         String testDataLabels = "data/t10k-labels.idx1-ubyte";
 
-        double eta = 0.008;
+        double eta = 0.005;
         int sizeOfHiddenLayer = 50;
 
         MnistReader imageReader = new MnistReader(trainingsDataImages, trainingsDataLabels, testDataImages, testDataLabels);
@@ -25,21 +25,18 @@ public class Main {
         //imageReader.getTrainingImage(15);
 
         NeuralNetwork network = new NeuralNetwork(sizeOfHiddenLayer);
-        
-        //for (int i = 1; i < 25000 ; i++) {
+
         for (int i = 1; i < imageReader.getTrainingLength(); i++) {
-            //int[] image = imageReader.getTrainingImage(i);
             double[] image = imageReader.getTrainingImage(i);
             int label = imageReader.getTrainingLabel(i);
 
             double[] output = network.forwardPropogate(image);
-            network.backPropogate(output, Helper.getTargetOutput(label), eta);
+            network.backPropogate(output, getValue(label), eta);
             //System.out.println("Training I: "+i);
         }
 
         int numberOfRightAnswers = 0;
         for (int i = 1; i <= imageReader.getTestLength(); i++) {
-            //int[] image = imageReader.getTestImage(i);
             double[] image = imageReader.getTestImage(i);
             int label = imageReader.getTestLabel(i);
             double[] actualOutput = network.forwardPropogate(image);
@@ -58,6 +55,15 @@ public class Main {
             }
             //System.out.println("Testing I: "+i);
         }
-        System.out.println("Right answers: " + numberOfRightAnswers + "/" + imageReader.getTestLength() + " == " + (double) numberOfRightAnswers / (double) imageReader.getTestLength()*100.0 + "%");
+        System.out.println("Right answers: " + numberOfRightAnswers + "/" + imageReader.getTestLength() + " == " + (double) numberOfRightAnswers / (double) imageReader.getTestLength() * 100.0 + "%");
+    }
+
+    public static double[] getValue(int label) {
+        double[] value = new double[10];
+        for (int i = 0; i < value.length; i++) {
+            value[i] = -1.0;
+        }
+        value[label] = 1.0;
+        return value;
     }
 }

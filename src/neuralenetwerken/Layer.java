@@ -29,55 +29,60 @@ public class Layer {
     public Layer getPrevLayer() {
         return prevLayer;
     }
-    
+
     public void setNeurons(List<Neuron> neurons) {
         this.neurons = neurons;
     }
 
     public void forwardPropogate() {
-        if (prevLayer != null) {
-            for (Neuron neuron : neurons) {
-                double total = 0.0;
-                for (Link link : neuron.getLinks()) {
-                    total += link.getWeight() * link.getNeuron().getValue();
-                    //System.out.println("New total: "+ total + " -- "+ link.getNeuron().getValue());
-                }
-                neuron.setValue(HyperbolicTangent.activation(total));
-                //System.out.println("Value: "+neuron.getValue());
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
+            double total = 0.0;
+            for (Link link : neuron.getLinks()) {
+                total += link.getWeight() * link.getNeuron().getValue();
+                //System.out.println("New total: "+ total + " -- "+ link.getNeuron().getValue());
             }
+            neuron.setValue(HyperbolicTangent.activation(total));
+            //System.out.println("Value: "+neuron.getValue());
         }
     }
 
-    public Map<Neuron, Double> backPropogate(Map<Neuron, Double> derivativesX, double eta) {
-        Map<Neuron, Double> derivativesY = new HashMap<Neuron, Double>();
-        Map<Double, Double> derivativesW = new HashMap<Double, Double>();
-        Map<Neuron, Double> derivativesXPreviousLayer = new HashMap<Neuron, Double>();
+    public HashMap<Neuron, Double> backPropogate(HashMap<Neuron, Double> derivativesX, double eta) {
+        HashMap<Neuron, Double> derivativesY = new HashMap<Neuron, Double>();
+        HashMap<Double, Double> derivativesW = new HashMap<Double, Double>();
+        HashMap<Neuron, Double> derivativesXPreviousLayer = new HashMap<Neuron, Double>();
 
-        //Calculate derivatives for y		
-        for (Neuron neuron : neurons) {
+        // equation 3
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
             double output = neuron.getValue();
             derivativesY.put(neuron, HyperbolicTangent.derivative(output) * derivativesX.get(neuron));
         }
 
-        //Calculate derivatives for w
-        for (Neuron neuron : neurons) {
-            for (Link link : neuron.getLinks()) {
+        // equation 4
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
+            for (int j = 0; j < neuron.getLinks().size(); j++) {
+                Link link = neuron.getLinks().get(j);
                 double output = link.getNeuron().getValue();
                 derivativesW.put(link.getWeight(), output * derivativesY.get(neuron));
             }
         }
-
-        //Calculate derivatives for x, for the previous layer
-        for (Neuron neuron : neurons) {
-            for (Link link : neuron.getLinks()) {
-                derivativesXPreviousLayer.put(link.getNeuron(),
-                        derivativesY.get(neuron) * derivativesW.get(link.getWeight()));
+        
+        // equation 5
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
+            for (int j = 0; j < neuron.getLinks().size(); j++) {
+                Link link = neuron.getLinks().get(j);
+                derivativesXPreviousLayer.put(link.getNeuron(), derivativesY.get(neuron) * derivativesW.get(link.getWeight()));
             }
         }
 
-        //Update the weights in this layer
-        for (Neuron neuron : neurons) {
-            for (Link link : neuron.getLinks()) {
+        // update weights
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
+            for (int j = 0; j < neuron.getLinks().size(); j++) {
+                Link link = neuron.getLinks().get(j);
                 double oldValue = link.getWeight();
                 double newValue = oldValue - eta * derivativesW.get(link.getWeight());
                 link.setWeight(newValue);
