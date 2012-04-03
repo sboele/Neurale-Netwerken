@@ -15,30 +15,27 @@ public class MnistReader {
 
     MnistManager trainingsData;
     MnistManager testData;
+    private List<Image> trainingsImages = new ArrayList<Image>();
+    private List<Image> testImages = new ArrayList<Image>();
 
     public MnistReader(String pathTrainingImages, String pathTrainingLabels, String pathTestImages, String pathTestLabels) {
         try {
             trainingsData = new MnistManager(pathTrainingImages, pathTrainingLabels);
             testData = new MnistManager(pathTestImages, pathTestLabels);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    public List<int[][]> getTrainingsImages() {
-        List<int[][]> result = new ArrayList<int[][]>();
-        try {
-            MnistImageFile images = trainingsData.getImages();
-            for (int i = 1; i <= 100; i++) {
-                images.setCurrentIndex(i);
-                int[][] image = images.readImage();
-                result.add(image);
+            
+            for (int i = 1; i < getTrainingLength(); i++) {
+                Image image = new Image(getTrainingLabel(i), getTrainingImage(i));
+                trainingsImages.add(image);
             }
+            
+            for (int i = 1; i < getTestLength(); i++) {
+                Image image = new Image(getTestLabel(i), getTestImage(i));
+                testImages.add(image);
+            }
+            
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-
-        return result;
     }
 
     public double[] getTrainingImage(int index) {
@@ -115,5 +112,33 @@ public class MnistReader {
 
     public int getTestLength() {
         return testData.getImages().getCount();
+    }
+
+    /**
+     * @return the trainingsImages
+     */
+    public List<Image> getTrainingsImages() {
+        return trainingsImages;
+    }
+
+    /**
+     * @param trainingsImages the trainingsImages to set
+     */
+    public void setTrainingsImages(List<Image> trainingsImages) {
+        this.trainingsImages = trainingsImages;
+    }
+
+    /**
+     * @return the testImages
+     */
+    public List<Image> getTestImages() {
+        return testImages;
+    }
+
+    /**
+     * @param testImages the testImages to set
+     */
+    public void setTestImages(List<Image> testImages) {
+        this.testImages = testImages;
     }
 }

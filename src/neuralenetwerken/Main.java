@@ -1,5 +1,8 @@
 package neuralenetwerken;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  *
  * @author Sander Boele
@@ -10,13 +13,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        //double avgPercentage = 0.0;
+        //for (int g = 0; g < 10; g++) {
         String trainingsDataImages = "data/train-images.idx3-ubyte";
         String trainingsDataLabels = "data/train-labels.idx1-ubyte";
         String testDataImages = "data/t10k-images.idx3-ubyte";
         String testDataLabels = "data/t10k-labels.idx1-ubyte";
 
-        double eta = 0.005;
+        double eta = 0.008;
         int sizeOfHiddenLayer = 50;
 
         MnistReader imageReader = new MnistReader(trainingsDataImages, trainingsDataLabels, testDataImages, testDataLabels);
@@ -26,19 +30,25 @@ public class Main {
 
         NeuralNetwork network = new NeuralNetwork(sizeOfHiddenLayer);
 
-        for (int i = 1; i < imageReader.getTrainingLength(); i++) {
-            double[] image = imageReader.getTrainingImage(i);
-            int label = imageReader.getTrainingLabel(i);
+        for (int j = 0; j < 10; j++) {
+            List<Image> trainingsImages = imageReader.getTrainingsImages();
+            Collections.shuffle(trainingsImages);
 
-            double[] output = network.forwardPropogate(image);
-            network.backPropogate(output, getValue(label), eta);
-            //System.out.println("Training I: "+i);
+            for (int i = 0; i < trainingsImages.size(); i++) {
+                double[] image = trainingsImages.get(i).getImage();
+                int label = trainingsImages.get(i).getLabel();
+
+                double[] output = network.forwardPropogate(image);
+                network.backPropogate(output, getValue(label), eta);
+                System.out.println("Training I: " + i);
+            }
         }
+        List<Image> testImages = imageReader.getTestImages();
 
         int numberOfRightAnswers = 0;
-        for (int i = 1; i <= imageReader.getTestLength(); i++) {
-            double[] image = imageReader.getTestImage(i);
-            int label = imageReader.getTestLabel(i);
+        for (int i = 0; i < testImages.size(); i++) {
+            double[] image = testImages.get(i).getImage();
+            int label = testImages.get(i).getLabel();
             double[] actualOutput = network.forwardPropogate(image);
 
             double bestOutput = -100.0;
@@ -49,14 +59,19 @@ public class Main {
                     bestIndex = j;
                 }
             }
-            //System.out.println("Output: "+ bestIndex + " -- Expected: " +label );
             if (label == bestIndex) {
                 numberOfRightAnswers++;
             }
-            //System.out.println("Testing I: "+i);
+            else {
+                System.out.println("Output: " + bestIndex + " -- Expected: " + label);
+            }
+            System.out.println("Testing I: " + i);
         }
-        System.out.println("Right answers: " + numberOfRightAnswers + "/" + imageReader.getTestLength() + " == " + (double) numberOfRightAnswers / (double) imageReader.getTestLength() * 100.0 + "%");
+        //avgPercentage += (double) numberOfRightAnswers / (double) imageReader.getTestLength() * 100.0;
+        System.out.println("Right answers: " + numberOfRightAnswers + "/" + testImages.size() + " == " + (double) numberOfRightAnswers / (double) testImages.size() * 100.0 + "%");
     }
+    //System.out.println("Avg: " + avgPercentage / 10.0);
+    //}
 
     public static double[] getValue(int label) {
         double[] value = new double[10];
